@@ -1,0 +1,33 @@
+---
+- name : mkdir /tmp/dcos
+  file: >-
+    path=/tmp/dcos
+    state=directory
+    mode=0755
+- name: download dcos_install.sh
+  get_url: >-
+    url={{ dcos_bootstrap_url }}/dcos_install.sh
+    dest=/tmp/dcos/dcos_install.sh
+    mode=0755
+    use_proxy=no
+- name: deploy masters...
+  become: True
+  become_user: root
+  when: "'{{dcos_bootstrap_master_group}}' in groups"
+  command: ./dcos_install.sh master
+  args:
+    chdir: /tmp/dcos
+- name: deploy private agents...
+  become: True
+  become_user: root
+  when: "'{{dcos_bootstrap_private_agent_group}}' in groups"
+  command: ./dcos_install.sh slave
+  args:
+    chdir: /tmp/dcos
+- name: deploy public agents...
+  become: True
+  become_user: root
+  when: "'{{dcos_bootstrap_master_group}}' in groups"
+  command: ./dcos_install.sh slave_public
+  args:
+    chdir: /tmp/dcos
