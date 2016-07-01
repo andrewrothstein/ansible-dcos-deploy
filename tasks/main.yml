@@ -26,6 +26,20 @@
     dest=/tmp/dcos/dcos_install.sh
     mode=0755
     use_proxy=no
+
+- name: proxify...
+  when: proxy_env.http_proxy is defined
+  become: yes
+  become_user: root
+  with_items:
+    - var/lib/dcos/environment.proxy
+    - opt/mesosphere/environment
+    - opt/mesosphere/environment.export
+  template: >-
+    src={{item}}.j2
+    dest=/{{item}}
+    mode=0644
+    
 - name: deploy masters...
   become: True
   become_user: root
