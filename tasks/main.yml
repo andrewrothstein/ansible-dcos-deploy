@@ -1,4 +1,20 @@
 ---
+- name: install dep pkgs
+  with_items:
+    - tar
+    - xz
+    - unzip
+    - curl
+    - ipset
+  become: yes
+  become_user: root
+  package: name={{item}} state=present
+
+- name: add nogroup group
+  become: yes
+  become_user: root
+  group: name=nogroup state=present
+  
 - name : mkdir /tmp/dcos
   file: >-
     path=/tmp/dcos
@@ -13,21 +29,21 @@
 - name: deploy masters...
   become: True
   become_user: root
-  when: "'{{dcos_bootstrap_master_group}}' in groups"
+  when: "'{{dcos_bootstrap_master_group}}' in group_names"
   command: ./dcos_install.sh master
   args:
     chdir: /tmp/dcos
 - name: deploy private agents...
   become: True
   become_user: root
-  when: "'{{dcos_bootstrap_private_agent_group}}' in groups"
+  when: "'{{dcos_bootstrap_private_agent_group}}' in group_names"
   command: ./dcos_install.sh slave
   args:
     chdir: /tmp/dcos
 - name: deploy public agents...
   become: True
   become_user: root
-  when: "'{{dcos_bootstrap_master_group}}' in groups"
+  when: "'{{dcos_bootstrap_public_agent_group}}' in group_names"
   command: ./dcos_install.sh slave_public
   args:
     chdir: /tmp/dcos
