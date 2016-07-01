@@ -1,2 +1,2 @@
 ---
-dcos_bootstrap_url : "http://{{ hostvars[groups[dcos_bootstrap_group][0]]['ansible_default_ipv4']['address'] }}:{{dcos_bootstrap_port}}"
+dcos_bootstrap_url : "http://{{ hostvars[groups[dcos_bootstrap_group][0]]['ansible_' + hostvars[groups[dcos_bootstrap_group][0]]['dcos_bootstrap_iface']]['ipv4']['address'] }}:{{dcos_bootstrap_port}}"
