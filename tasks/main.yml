@@ -27,10 +27,36 @@
     mode=0755
     use_proxy=no
 
+- name: deploy masters...
+  become: True
+  become_user: root
+  ignore_errors: yes
+  when: "'{{dcos_bootstrap_master_group}}' in group_names"
+  command: ./dcos_install.sh master
+  args:
+    chdir: /tmp/dcos
+- name: deploy private agents...
+  become: True
+  become_user: root
+  ignore_errors: yes
+  when: "'{{dcos_bootstrap_private_agent_group}}' in group_names"
+  command: ./dcos_install.sh slave
+  args:
+    chdir: /tmp/dcos
+- name: deploy public agents...
+  become: True
+  become_user: root
+  ignore_errors: yes
+  when: "'{{dcos_bootstrap_public_agent_group}}' in group_names"
+  command: ./dcos_install.sh slave_public
+  args:
+    chdir: /tmp/dcos
+
 - name: proxify...
   when: proxy_env.http_proxy is defined
   become: yes
   become_user: root
+  register: dcos_deploy_proxified
   with_items:
     - var/lib/dcos/environment.proxy
     - opt/mesosphere/environment
@@ -40,24 +66,10 @@
     dest=/{{item}}
     mode=0644
     
-- name: deploy masters...
-  become: True
+- name: restart proxified services
+  when: dcos_deploy_proxified | changed
+  become: yes
   become_user: root
-  when: "'{{dcos_bootstrap_master_group}}' in group_names"
-  command: ./dcos_install.sh master
-  args:
-    chdir: /tmp/dcos
-- name: deploy private agents...
-  become: True
-  become_user: root
-  when: "'{{dcos_bootstrap_private_agent_group}}' in group_names"
-  command: ./dcos_install.sh slave
-  args:
-    chdir: /tmp/dcos
-- name: deploy public agents...
-  become: True
-  become_user: root
-  when: "'{{dcos_bootstrap_public_agent_group}}' in group_names"
-  command: ./dcos_install.sh slave_public
-  args:
-    chdir: /tmp/dcos
+  with_items:
+    - dcos-cosmos
+  service: name={{item}} state=restarted

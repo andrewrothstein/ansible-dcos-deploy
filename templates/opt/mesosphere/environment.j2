@@ -1,13 +1,8 @@
 {% if proxy_env.http_proxy is defined %}
-PROXY_IP={{http_proxy_hostname}}
-PROXY_PORT={{http_proxy_port}}
-http_proxy="http://$PROXY_IP:$PROXY_PORT"
-https_proxy=$http_proxy
-ftp_proxy=$http_proxy
+http_proxy="{{proxy_env.http_proxy}}"
+https_proxy="{{proxy_env.https_proxy}}"
 no_proxy="{{proxy_env.no_proxy}}"
 HTTP_PROXY=$http_proxy
 HTTPS_PROXY=$http_proxy
-FTP_PROXY=$http_proxy
 NO_PROXY=$no_proxy
-JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=$PROXY_IP -Dhttp.proxyPort=$PROXY_PORT -Dhttps.proxyHost=$PROXY_IP -Dhttps.proxyPort=$PROXY_PORT -Dhttp.nonProxyHosts=$NO_PROXY -Dhttps.nonProxyHosts=$NO_PROXY"
 {% endif %}
