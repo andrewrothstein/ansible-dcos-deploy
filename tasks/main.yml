@@ -35,6 +35,7 @@
   command: ./dcos_install.sh master
   args:
     chdir: /tmp/dcos
+
 - name: deploy private agents...
   become: True
   become_user: root
@@ -43,6 +44,7 @@
   command: ./dcos_install.sh slave
   args:
     chdir: /tmp/dcos
+
 - name: deploy public agents...
   become: True
   become_user: root
@@ -66,10 +68,26 @@
     dest=/{{item}}
     mode=0644
     
-- name: restart proxified services
-  when: dcos_deploy_proxified | changed
+- name: restart proxified master/dcos-cosmos service
+  when: dcos_deploy_proxified | changed and "'{{dcos_bootstrap_master_group}}' in group_names"
   become: yes
   become_user: root
   with_items:
     - dcos-cosmos
+  service: name={{item}} state=restarted
+
+- name: restart proxified private agent / dcos-mesos-slave service
+  when: dcos_deploy_proxified | changed and "'{{dcos_bootstrap_private_agent_group}}' in group_names"
+  become: yes
+  become_user: root
+  with_items:
+    - dcos-mesos-slave
+  service: name={{item}} state=restarted
+
+- name: restart proxified public agent / dcos-mesos-slave-public service
+  when: dcos_deploy_proxified | changed and "'{{dcos_bootstrap_public_agent_group}}' in group_names"
+  become: yes
+  become_user: root
+  with_items:
+    - dcos-mesos-slave-public
   service: name={{item}} state=restarted
