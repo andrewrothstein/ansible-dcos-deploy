@@ -1,0 +1,5 @@
+{% if proxy_env.http_proxy is defined %}
+http_proxy={{proxy_env.http_proxy}}
+https_proxy={{proxy_env.https_proxy}}
+no_proxy="{{proxy_env.no_proxy}}"
+{% endif %}

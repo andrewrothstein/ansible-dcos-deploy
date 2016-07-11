@@ -65,6 +65,7 @@
   with_items:
     - var/lib/dcos/environment.proxy
     - var/lib/dcos/mesos-slave-common
+    - opt/mesosphere/environment
   template: >-
     src={{item}}.j2
     dest=/{{item}}
