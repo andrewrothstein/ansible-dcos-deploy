@@ -64,8 +64,7 @@
   register: dcos_deploy_proxified
   with_items:
     - var/lib/dcos/environment.proxy
-    - opt/mesosphere/environment
-    - opt/mesosphere/environment.export
+    - var/lib/dcos/mesos-slave-common
   template: >-
     src={{item}}.j2
     dest=/{{item}}
