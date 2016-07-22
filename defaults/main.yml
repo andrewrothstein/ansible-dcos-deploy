@@ -3,3 +3,4 @@ dcos_bootstrap_group : 'dcos-bootstrap'
 dcos_bootstrap_master_group : 'dcos-masters'
 dcos_bootstrap_private_agent_group : 'dcos-private-agents'
 dcos_bootstrap_public_agent_group : 'dcos-public-agents'
+dcos_bootstrap_port: 8080
