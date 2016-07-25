@@ -1,2 +1,7 @@
 ---
 dcos_bootstrap_url : "http://{{ hostvars[groups[dcos_bootstrap_group][0]]['ansible_' + hostvars[groups[dcos_bootstrap_group][0]]['dcos_bootstrap_iface']]['ipv4']['address'] }}:{{dcos_bootstrap_port}}"
+dcos_deploy_bootstrap_no_proxy: "{% for host in groups[dcos_bootstrap_group] %}{{hostvars[host]['ansible_' + hostvars[host]['dcos_bootstrap_iface']]['ipv4']['address']}}{% if not loop.last %},{% endif %}{% endfor %}"
+dcos_deploy_master_no_proxy: "{% for host in groups[dcos_bootstrap_master_group] %}{{hostvars[host]['ansible_' + hostvars[host]['dcos_bootstrap_iface']]['ipv4']['address']}}{% if not loop.last %},{% endif %}{% endfor %}"
+dcos_deploy_private_agent_no_proxy: "{% for host in groups[dcos_bootstrap_private_agent_group] %}{{hostvars[host]['ansible_' + hostvars[host]['dcos_bootstrap_iface']]['ipv4']['address']}}{% if not loop.last %},{% endif %}{% endfor %}"
+dcos_deploy_public_agent_no_proxy: "{% for host in groups[dcos_bootstrap_public_agent_group] %}{{hostvars[host]['ansible_' + hostvars[host]['dcos_bootstrap_iface']]['ipv4']['address']}}{% if not loop.last %},{% endif %}{% endfor %}"
+dcos_deploy_no_proxy : "{{proxy_env.no_proxy}},{{dcos_deploy_bootstrap_no_proxy}},{{dcos_deploy_master_no_proxy}},{{dcos_deploy_private_agent_no_proxy}},{{dcos_deploy_public_agent_no_proxy}}"

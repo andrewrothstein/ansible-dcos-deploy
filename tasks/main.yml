@@ -65,11 +65,29 @@
   with_items:
     - var/lib/dcos/environment.proxy
     - var/lib/dcos/mesos-slave-common
-    - opt/mesosphere/environment
   template: >-
     src={{item}}.j2
     dest=/{{item}}
     mode=0644
+- name: >
+    additional no_proxy setting to prevent IP based HTTP traffic
+    from getting swallowed by the proxy
+  when: proxy_env.no_proxy is defined
+  become: yes
+  become_user: root
+  blockinfile:
+    dest: /opt/mesosphere/environment
+    block: |
+      no_proxy="{{dcos_deploy_no_proxy}}"
+      NO_PROXY="{{dcos_deploy_no_proxy}}"
+
+- name: restart services to reflect proxy changes
+  with_items:
+    - dcos-mesos-dns
+  when: proxy_env.no_proxy is defined
+  become: yes
+  become_user: root
+  service: name={{item}} state=restarted
     
 - name: restart proxified master/dcos-cosmos service
   when: >-
