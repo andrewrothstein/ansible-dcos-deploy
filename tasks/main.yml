@@ -84,7 +84,9 @@
 - name: restart services to reflect proxy changes
   with_items:
     - dcos-mesos-dns
-  when: proxy_env.no_proxy is defined
+  when: >-
+    proxy_env.no_proxy is defined
+    and '{{dcos_bootstrap_master_group}}' in group_names
   become: yes
   become_user: root
   service: name={{item}} state=restarted
