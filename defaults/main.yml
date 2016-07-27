@@ -4,3 +4,8 @@ dcos_bootstrap_master_group : 'dcos-masters'
 dcos_bootstrap_private_agent_group : 'dcos-private-agents'
 dcos_bootstrap_public_agent_group : 'dcos-public-agents'
 dcos_bootstrap_port: 8080
+
+# up to six search domains supported
+#dcos_deploy_search_domains:
+#  - mycompany.com
+#  - mysubnet.mycompany.com

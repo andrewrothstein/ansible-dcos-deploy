@@ -57,6 +57,16 @@
   args:
     chdir: /tmp/dcos
 
+- name: setup search domains
+  when: dcos_deploy_search_domains is defined
+  become: yes
+  become_user: root
+  with_items:
+    - opt/mesosphere/etc/dns_search_config
+  template: >-
+    src={{item}}.j2
+    dest=/{{item}}
+    
 - name: proxify...
   when: proxy_env.http_proxy is defined
   become: yes
