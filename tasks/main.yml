@@ -13,6 +13,7 @@
 - name: configure SELinux policy
   become: yes
   become_user: root
+  when: ansible_os_family == "RedHat"
   selinux: >-
     conf={{ dcos_selinux_conf }}
     policy={{ dcos_selinux_policy }}
