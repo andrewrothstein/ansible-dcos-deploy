@@ -10,6 +10,14 @@
   become_user: root
   package: name={{item}} state=present
 
+- name: configure SELinux policy
+  become: yes
+  become_user: root
+  selinux: >-
+    conf={{ dcos_selinux_conf }}
+    policy={{ dcos_selinux_policy }}
+    state={{ dcos_selinux_state }}
+
 - name: add nogroup group
   become: yes
   become_user: root
@@ -20,6 +28,7 @@
     path=/tmp/dcos
     state=directory
     mode=0755
+
 - name: download dcos_install.sh
   get_url: >-
     url={{ dcos_bootstrap_url }}/dcos_install.sh
