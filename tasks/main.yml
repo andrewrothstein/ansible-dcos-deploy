@@ -111,7 +111,7 @@
   become_user: root
   service: name={{item}} state=restarted
     
-- name: restart proxified master/dcos-cosmos service
+- name: restart proxified master / dcos-cosmos, dcos-oauth service
   when: >-
     dcos_deploy_proxified.changed
     and '{{dcos_bootstrap_master_group}}' in group_names
@@ -119,6 +119,7 @@
   become_user: root
   with_items:
     - dcos-cosmos
+    - dcos-oauth
   service: name={{item}} state=restarted
 
 - name: restart proxified private agent / dcos-mesos-slave service
