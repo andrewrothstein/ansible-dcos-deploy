@@ -83,12 +83,12 @@
   become_user: root
   register: dcos_deploy_proxified
   with_items:
-    - var/lib/dcos/environment.proxy
-    - var/lib/dcos/mesos-slave-common
+    - var/lib/dcos/proxy.env
   template: >-
     src={{item}}.j2
     dest=/{{item}}
     mode=0644
+    
 - name: >
     additional no_proxy setting to prevent IP based HTTP traffic
     from getting swallowed by the proxy
