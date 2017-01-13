@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Andrew Rothstein
-  description: '@TODO name this role'
+  description: Deploys dcos-master, dcos-private-agent and dcos-public-agent to nodes assigned in group vars
   company: BlackRock
   license:
     - MIT
@@ -17,7 +17,7 @@ galaxy_info:
       versions:
         - trusty
   galaxy_tags:
-    - development
+    - dcos
+    - mesosphere
 
 dependencies: []
-  
