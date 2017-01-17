@@ -66,3 +66,13 @@
   command: ./dcos_install.sh slave_public
   args:
     chdir: /tmp/dcos
+
+- name: restart master node service discovery and proxy services to pick up changes
+  become: True
+  become_user: root
+  when: >-
+    '{{dcos_bootstrap_master_group}}' in group_names
+  with_items:
+    - dcos-mesos-dns
+    - dcos-adminrouter
+  service: name={{item}} state=restarted
